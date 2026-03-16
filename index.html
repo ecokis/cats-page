@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>고양이 세상 🐱</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    header {
+      text-align: center;
+      padding: 60px 20px 30px;
+    }
+
+    header h1 {
+      font-size: 3.5rem;
+      background: linear-gradient(90deg, #f9a8d4, #fcd34d, #6ee7b7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+
+    /* 고양이 ASCII 아트 */
+    .ascii-cat {
+      text-align: center;
+      padding: 20px;
+      font-size: 1rem;
+      line-height: 1.4;
+      color: #fcd34d;
+      white-space: pre;
+      font-family: monospace;
+    }
+
+    /* 고양이 카드 그리드 */
+    .cats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .cat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(249,168,212,0.2);
+      border-color: rgba(249,168,212,0.3);
+    }
+
+    .cat-emoji {
+      font-size: 4rem;
+      margin-bottom: 16px;
+      display: block;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .cat-card:nth-child(2) .cat-emoji { animation-delay: 0.5s; }
+    .cat-card:nth-child(3) .cat-emoji { animation-delay: 1s; }
+    .cat-card:nth-child(4) .cat-emoji { animation-delay: 1.5s; }
+    .cat-card:nth-child(5) .cat-emoji { animation-delay: 2s; }
+    .cat-card:nth-child(6) .cat-emoji { animation-delay: 2.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .cat-name {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fcd34d;
+    }
+
+    .cat-breed {
+      font-size: 0.85rem;
+      color: #f9a8d4;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .cat-desc {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    .cat-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .trait {
+      background: rgba(249,168,212,0.15);
+      border: 1px solid rgba(249,168,212,0.3);
+      color: #f9a8d4;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+    }
+
+    /* 고양이 소리 섹션 */
+    .meow-section {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .meow-section h2 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #6ee7b7;
+    }
+
+    .meow-btn {
+      background: linear-gradient(135deg, #f9a8d4, #fcd34d);
+      border: none;
+      border-radius: 50px;
+      padding: 16px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .meow-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(249,168,212,0.4);
+    }
+
+    .meow-btn:active {
+      transform: scale(0.97);
+    }
+
+    #meow-display {
+      margin-top: 24px;
+      font-size: 2rem;
+      min-height: 60px;
+      color: #fcd34d;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    /* 고양이 팩트 */
+    .fact-section {
+      max-width: 700px;
+      margin: 0 auto 60px;
+      padding: 0 24px;
+    }
+
+    .fact-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      color: #6ee7b7;
+      margin-bottom: 24px;
+    }
+
+    .fact-box {
+      background: rgba(110,231,183,0.1);
+      border: 1px solid rgba(110,231,183,0.3);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+
+    .fact-num {
+      background: #6ee7b7;
+      color: #1a1a2e;
+      font-weight: 900;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+
+    .fact-text {
+      color: #cbd5e1;
+      line-height: 1.6;
+    }
+
+    /* 별 배경 */
+    .stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 4s ease-in-out infinite;
+      opacity: 0;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 0.8; }
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 별 배경 -->
+  <div class="stars" id="stars"></div>
+
+  <header>
+    <h1>🐱 고양이 세상 🐱</h1>
+    <p>세상에서 가장 사랑스러운 동물을 만나보세요</p>
+  </header>
+
+  <div class="ascii-cat">
+    /\_____/\
+   /  o   o  \
+  ( ==  ^  == )
+   )         (
+  (           )
+ ( (  )   (  ) )
+(__(__)___(__)__)
+  </div>
+
+  <!-- 고양이 카드 -->
+  <div class="cats-grid">
+    <div class="cat-card">
+      <span class="cat-emoji">😺</span>
+      <div class="cat-name">나비</div>
+      <div class="cat-breed">코리안 숏헤어</div>
+      <div class="cat-desc">활발하고 호기심이 넘치는 성격. 장난감을 좋아하고 집사를 졸졸 따라다닙니다.</div>
+      <div class="cat-traits">
+        <span class="trait">활발함</span>
+        <span class="trait">애교쟁이</span>
+        <span class="trait">호기심</span>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <span class="cat-emoji">😸</span>
+      <div class="cat-name">뭉치</div>
+      <div class="cat-breed">페르시안</div>
+      <div class="cat-desc">우아하고 조용한 귀족 고양이. 긴 털이 매력적이며 안기는 것을 좋아합니다.</div>
+      <div class="cat-traits">
+        <span class="trait">우아함</span>
+        <span class="trait">조용함</span>
+        <span class="trait">온순함</span>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <span class="cat-emoji">🐱</span>
+      <div class="cat-name">초코</div>
+      <div class="cat-breed">스코티시 폴드</div>
+      <div class="cat-desc">접힌 귀가 트레이드마크. 둥글고 사랑스러운 얼굴에 차분한 성격을 가졌습니다.</div>
+      <div class="cat-traits">
+        <span class="trait">차분함</span>
+        <span class="trait">사교적</span>
+        <span class="trait">지적임</span>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <span class="cat-emoji">😻</span>
+      <div class="cat-name">하늘</div>
+      <div class="cat-breed">러시안 블루</div>
+      <div class="cat-desc">은빛 털과 초록 눈이 아름다운 고양이. 수줍음이 많지만 가족에게는 매우 다정합니다.</div>
+      <div class="cat-traits">
+        <span class="trait">수줍음</span>
+        <span class="trait">충성스러움</span>
+        <span class="trait">지적임</span>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <span class="cat-emoji">🙀</span>
+      <div class="cat-name">호랑이</div>
+      <div class="cat-breed">메인쿤</div>
+      <div class="cat-desc">고양이 중 가장 큰 품종 중 하나. 개처럼 충성스럽고 물을 좋아하는 특이한 고양이입니다.</div>
+      <div class="cat-traits">
+        <span class="trait">대형묘</span>
+        <span class="trait">충성스러움</span>
+        <span class="trait">활동적</span>
+      </div>
+    </div>
+
+    <div class="cat-card">
+      <span class="cat-emoji">😹</span>
+      <div class="cat-name">구름</div>
+      <div class="cat-breed">흰색 터키시 앙고라</div>
+      <div class="cat-desc">새하얀 털이 구름같은 고양이. 음악을 좋아하고 춤추듯 움직이는 것이 특기입니다.</div>
+      <div class="cat-traits">
+        <span class="trait">우아함</span>
+        <span class="trait">활발함</span>
+        <span class="trait">예술적</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 야옹 버튼 -->
+  <div class="meow-section">
+    <h2>고양이 부르기</h2>
+    <button class="meow-btn" onclick="meow()">🐾 야옹~ 불러보기</button>
+    <div id="meow-display"></div>
+  </div>
+
+  <!-- 고양이 팩트 -->
+  <div class="fact-section">
+    <h2>고양이 재미있는 사실</h2>
+
+    <div class="fact-box">
+      <div class="fact-num">1</div>
+      <div class="fact-text">고양이는 하루에 평균 <strong>12~16시간</strong>을 잠을 잡니다. 일생의 약 2/3를 자며 보냅니다.</div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-num">2</div>
+      <div class="fact-text">고양이의 코는 사람의 지문처럼 모두 <strong>고유한 무늬</strong>를 가지고 있습니다.</div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-num">3</div>
+      <div class="fact-text">고양이는 <strong>64~79Hz</strong>의 주파수로 그루밍(골골송)을 하며, 이 진동이 뼈 치유를 돕는다는 연구가 있습니다.</div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-num">4</div>
+      <div class="fact-text">고양이는 약 <strong>100가지</strong> 이상의 서로 다른 소리를 낼 수 있습니다. 반면 개는 약 10가지 정도입니다.</div>
+    </div>
+
+    <div class="fact-box">
+      <div class="fact-num">5</div>
+      <div class="fact-text">고양이의 귀에는 32개의 근육이 있어 독립적으로 <strong>180도</strong>까지 회전할 수 있습니다.</div>
+    </div>
+  </div>
+
+  <footer>
+    🐾 고양이를 사랑하는 모든 집사들에게 바칩니다 🐾
+  </footer>
+
+  <script>
+    // 별 생성
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 4 + 's';
+      star.style.animationDuration = (2 + Math.random() * 4) + 's';
+      starsEl.appendChild(star);
+    }
+
+    // 야옹 버튼
+    const meows = [
+      '야옹~ 🐱', '냥냥~ 😺', '그르릉... 😸', '뮤~ 🐾',
+      '야아옹~ 😻', '냐~ 🐱', '골골골... 😹', '냥! 🙀',
+      '야옹야옹~ 🐈', '뀨~ 😽'
+    ];
+
+    let lastIdx = -1;
+    function meow() {
+      let idx;
+      do { idx = Math.floor(Math.random() * meows.length); } while (idx === lastIdx);
+      lastIdx = idx;
+      const el = document.getElementById('meow-display');
+      el.style.opacity = '0';
+      el.style.transform = 'scale(0.5)';
+      setTimeout(() => {
+        el.textContent = meows[idx];
+        el.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        el.style.opacity = '1';
+        el.style.transform = 'scale(1)';
+      }, 150);
+    }
+  </script>
+</body>
+</html>
